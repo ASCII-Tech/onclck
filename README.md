@@ -2,8 +2,8 @@
 
 onclck Project
 
-Clone the Project Repository:
-bash
+Clone the Project Repository:\n
+bash\n
 git clone https://github.com/ASCII-Tech/onclck.git
 
 Navigate to Your Project Directory:
