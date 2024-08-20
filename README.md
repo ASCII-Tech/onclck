@@ -1,7 +1,7 @@
 # onclckMarket
 
 ## Clone the Project Repository:
-bash
+``` bash
 git clone https://github.com/ASCII-Tech/onclck.git
 
 ## Navigate to Your Project Directory:
