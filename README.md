@@ -3,7 +3,7 @@
 ## Clone the Project Repository:
 ``` bash
 git clone https://github.com/ASCII-Tech/onclck.git
-
+```
 ## Navigate to Your Project Directory:
 bash
 cd project-name
