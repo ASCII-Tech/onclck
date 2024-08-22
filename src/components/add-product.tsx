@@ -70,3 +70,5 @@ export function addProduct() {
     </div>
   )
 }
+
+export default addProduct;

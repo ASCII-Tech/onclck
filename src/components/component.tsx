@@ -25,6 +25,7 @@ To read more about using these font, please visit the Next.js documentation:
 **/
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
+import { deflate } from "zlib"
 
 export function Component() {
   return (
@@ -43,17 +44,9 @@ export function Component() {
             <SearchIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary-foreground/50" />
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <DollarSignIcon className="w-6 h-6" />
-              <span className="text-lg font-medium">$45,231.89</span>
-            </div>
             <Link href="#" className="hover:text-primary-foreground/80" prefetch={false}>
               <UserIcon className="w-6 h-6" />
               <span className="sr-only">Account</span>
-            </Link>
-            <Link href="#" className="hover:text-primary-foreground/80" prefetch={false}>
-              <PlusIcon className="w-6 h-6" />
-              <span className="sr-only">Cart</span>
             </Link>
           </div>
         </div>
@@ -69,7 +62,7 @@ export function Component() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
               <div className="bg-background rounded-lg overflow-hidden shadow-lg relative">
-                <Link href="#" prefetch={false}>
+                <Link href="/product" prefetch={false}>
                   <div className="aspect-square">
                     <img
                       src="/placeholder.svg"
@@ -274,6 +267,8 @@ export function Component() {
     </div>
   )
 }
+
+export default Component;
 
 function DollarSignIcon(props) {
   return (

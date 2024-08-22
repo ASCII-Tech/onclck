@@ -80,6 +80,7 @@ export function productTemp() {
     </div>
   )
 }
+export default productTemp;
 
 function ChevronDownIcon(props) {
   return (
