@@ -39,7 +39,7 @@ export function paymentSelect() {
             <LogInIcon className="h-6 w-auto" />
           </Link>
           <nav className="flex items-center gap-4">
-            <Link href="#" className="font-medium hover:underline" prefetch={false}>
+            <Link href="/transaction/phoneVerify" className="font-medium hover:underline" prefetch={false}>
               Checkout
             </Link>
             <Link href="#" className="font-medium hover:underline" prefetch={false}>
@@ -126,16 +126,19 @@ export function paymentSelect() {
               </div>
             </div>
           </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full">
-              Checkout
-            </Button>
-          </CardFooter>
+          <Link href="/transaction/phoneVerify">
+            <CardFooter>
+              <Button type="submit" className="w-full">
+                Checkout
+              </Button>
+            </CardFooter>
+          </Link>
         </Card>
       </main>
     </div>
   )
 }
+export default paymentSelect;
 
 function BanknoteIcon(props) {
   return (

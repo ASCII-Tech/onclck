@@ -23,6 +23,7 @@ To read more about using these font, please visit the Next.js documentation:
 - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
+import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
@@ -47,9 +48,11 @@ export function productTemp() {
                 <Badge variant="secondary">Free Shipping</Badge>
               </div>
               <div className="flex items-center gap-2">
-                <Button size="lg" className="w-full">
-                  Buy It Now
-                </Button>
+                <Link href="/transaction/orderSummary">
+                  <Button size="lg" className="w-full">
+                    Buy It Now
+                  </Button>
+                </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button size="lg" variant="outline" className="w-auto">

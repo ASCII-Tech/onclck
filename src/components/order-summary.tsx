@@ -23,6 +23,7 @@ To read more about using these font, please visit the Next.js documentation:
 - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
+'use client';
 import Link from "next/link"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -34,21 +35,6 @@ import { Button } from "@/components/ui/button"
 export function orderSummary() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <header className="bg-primary text-primary-foreground py-4 px-6">
-        <div className="container mx-auto flex items-center justify-between">
-          <Link href="#" prefetch={false}>
-            <LogInIcon className="h-6 w-auto" />
-          </Link>
-          <nav className="flex items-center gap-4">
-            <Link href="#" className="font-medium hover:underline" prefetch={false}>
-              Checkout
-            </Link>
-            <Link href="#" className="font-medium hover:underline" prefetch={false}>
-              Account
-            </Link>
-          </nav>
-        </div>
-      </header>
       <main className="container mx-auto flex flex-1 flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-8">
           <Card>
@@ -135,7 +121,8 @@ export function orderSummary() {
                     paymentMethod: "Telebirr",
                     phoneNumber: "+1 (555) 555-5555",
                   }
-                  window.location.href = `/payment-verification?${new URLSearchParams(transactionDetails).toString()}`
+                  // window.location.href = `/payment-verification?${new URLSearchParams(transactionDetails).toString()}`
+                  window.location.href = `/transaction/phoneVerify`
                 }}
               >
                 Verify Payment
@@ -147,6 +134,8 @@ export function orderSummary() {
     </div>
   )
 }
+
+export default orderSummary;
 
 function BanknoteIcon(props) {
   return (

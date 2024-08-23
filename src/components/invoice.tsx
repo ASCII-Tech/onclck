@@ -29,21 +29,6 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 export function invoice() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <header className="bg-primary text-primary-foreground py-4 px-6">
-        <div className="container mx-auto flex items-center justify-between">
-          <Link href="#" prefetch={false}>
-            <LogInIcon className="h-6 w-auto" />
-          </Link>
-          <nav className="flex items-center gap-4">
-            <Link href="#" className="font-medium hover:underline" prefetch={false}>
-              Checkout
-            </Link>
-            <Link href="#" className="font-medium hover:underline" prefetch={false}>
-              Account
-            </Link>
-          </nav>
-        </div>
-      </header>
       <main className="container mx-auto flex flex-1 flex-col items-center justify-center gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <Card className="w-full max-w-md">
           <CardHeader>
@@ -91,6 +76,7 @@ export function invoice() {
     </div>
   )
 }
+export default invoice;
 
 function LogInIcon(props) {
   return (
