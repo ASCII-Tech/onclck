@@ -32,6 +32,10 @@ export function addProduct() {
     description: "A soft and warm knit sweater perfect for chilly days.",
     price: 59.99,
   })
+  const [files, setFiles] = useState([])
+  const handleFileUpload = (event) => {
+    setFiles(event.target.files)
+  }
   const handleSubmit = (e) => {
     e.preventDefault()
     setProduct({
@@ -51,14 +55,25 @@ export function addProduct() {
           height={600}
           className="w-full rounded-lg object-cover aspect-square"
         />
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm">
+            <UploadIcon className="w-4 h-4 mr-2" />
+            Add files
+          </Button>
+          <input type="file" multiple className="hidden" onChange={handleFileUpload} />
+        </div>
       </div>
-      <div className="grid gap-6">
+      <div className="grid gap-6 my-2">
         <form onSubmit={handleSubmit}>
-          <div className="grid gap-2">
+          <div className="grid gap-2 my-4">
             <Label htmlFor="description">Product Description</Label>
             <Textarea id="description" placeholder="Enter product description" className="w-full" />
           </div>
-          <div className="grid gap-2">
+          <div className="grid gap-2 my-4">
+            <Label htmlFor="price">Name</Label>
+            <Input type="string" id="name" placeholder="Enter product name" className="w-full" />
+          </div>
+          <div className="grid gap-2 my-4">
             <Label htmlFor="price">Price</Label>
             <Input type="number" id="price" placeholder="Enter product price" className="w-full" />
           </div>
@@ -72,3 +87,24 @@ export function addProduct() {
 }
 
 export default addProduct;
+
+function UploadIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="17 8 12 3 7 8" />
+      <line x1="12" x2="12" y1="3" y2="15" />
+    </svg>
+  )
+}
