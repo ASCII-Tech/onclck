@@ -12,6 +12,10 @@ cd project-name
 ``` bash
 npm install
 ```
+## Install TailWind and Additional dependencies using npm:
+``` bash
+npm install -D @telebirrh5/core radix-ui tailwindcss postcss autoprefixer
+```
 ## Run the following command to initialize your project for V0:
 ``` bash
 npx v0@latest init
