@@ -33,9 +33,12 @@ export function addProduct() {
     price: 59.99,
   })
   const [files, setFiles] = useState([])
-  const handleFileUpload = (event) => {
-    setFiles(event.target.files)
-  }
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFiles(event.target.files);
+    }
+  };
+  
   const handleSubmit = (e) => {
     e.preventDefault()
     setProduct({
