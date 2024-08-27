@@ -26,7 +26,18 @@ import { Button } from "@/components/ui/button"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 
 export function overview2() {
-  const orders = [
+  type Order = {
+    id: string;
+    customer: string;
+    item: string;
+    description: string;
+    quantity: number;
+    price: number;
+    qrCode: string;
+    status: string;
+  };
+
+  const orders: Order[] =[
     {
       id: "ORD001",
       customer: "John Doe",
@@ -78,9 +89,9 @@ export function overview2() {
       status: "Completed",
     },
   ]
-  const [searchTerm, setSearchTerm] = useState("")
-  const [sortColumn, setSortColumn] = useState(null)
-  const [sortDirection, setSortDirection] = useState(null)
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [sortColumn, setSortColumn] = useState<keyof Order | null>(null);
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(null);
   const filteredOrders = useMemo(() => {
     return orders.filter((order) =>
       Object.values(order).some((value) => value.toString().toLowerCase().includes(searchTerm.toLowerCase())),
@@ -96,14 +107,15 @@ export function overview2() {
       return 0
     })
   }, [filteredOrders, sortColumn, sortDirection])
-  const handleSort = (column) => {
-    if (sortColumn === column) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
-    } else {
-      setSortColumn(column)
-      setSortDirection("asc")
-    }
+  const handleSort = (column: keyof typeof orders[number]) => {
+  if (sortColumn === column) {
+    setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+  } else {
+    setSortColumn(column);
+    setSortDirection("asc");
   }
+};
+
   return (
     <div className="flex flex-col min-h-screen w-auto px-20 overflow-hidden">
       <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-6 lg:h-[60px]">
