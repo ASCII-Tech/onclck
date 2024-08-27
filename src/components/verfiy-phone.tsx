@@ -70,7 +70,7 @@ export function verfiyPhone() {
 }
 export default verfiyPhone;
 
-function LogInIcon(props) {
+function LogInIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

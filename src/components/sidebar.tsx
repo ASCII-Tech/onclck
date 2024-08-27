@@ -105,7 +105,7 @@ export function sidebar() {
 }
 export default sidebar;
 
-function InfoIcon(props) {
+function InfoIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -126,7 +126,7 @@ function InfoIcon(props) {
   )
 }
 
-function PlusIcon(props) {
+function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -146,7 +146,7 @@ function PlusIcon(props) {
   )
 }
 
-function LayoutGridIcon(props) {
+function LayoutGridIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -169,7 +169,7 @@ function LayoutGridIcon(props) {
 }
 
 
-function MountainIcon(props) {
+function MountainIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -188,7 +188,7 @@ function MountainIcon(props) {
   )
 }
 
-function PackageIcon(props) {
+function PackageIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -210,7 +210,7 @@ function PackageIcon(props) {
   )
 }
 
-function SettingsIcon(props) {
+function SettingsIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

@@ -179,10 +179,6 @@ export function overview2() {
                     <span className="ml-1">{sortDirection === "asc" ? "\u2191" : "\u2193"}</span>
                   )}
                 </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => handleSort("id")}>
-                  Order Code
-                  {sortColumn === "id" && <span className="ml-1">{sortDirection === "asc" ? "\u2191" : "\u2193"}</span>}
-                </TableHead>
                 <TableHead>QR Code</TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
@@ -195,7 +191,6 @@ export function overview2() {
                   <TableCell>{order.description}</TableCell>
                   <TableCell>{order.quantity}</TableCell>
                   <TableCell>${order.price.toFixed(2)}</TableCell>
-                  <TableCell>{order.id}</TableCell>
                   <TableCell>
                     <img
                       src="/placeholder.svg"
@@ -223,7 +218,7 @@ export function overview2() {
 
 export default overview2;
 
-function SearchIcon(props) {
+function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

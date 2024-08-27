@@ -78,7 +78,7 @@ export function invoice() {
 }
 export default invoice;
 
-function LogInIcon(props) {
+function LogInIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

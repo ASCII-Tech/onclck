@@ -140,7 +140,7 @@ export function paymentSelect() {
 }
 export default paymentSelect;
 
-function BanknoteIcon(props) {
+function BanknoteIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -162,7 +162,7 @@ function BanknoteIcon(props) {
 }
 
 
-function CreditCardIcon(props) {
+function CreditCardIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -183,7 +183,7 @@ function CreditCardIcon(props) {
 }
 
 
-function DollarSignIcon(props) {
+function DollarSignIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -204,7 +204,7 @@ function DollarSignIcon(props) {
 }
 
 
-function LogInIcon(props) {
+function LogInIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -226,7 +226,7 @@ function LogInIcon(props) {
 }
 
 
-function PhoneIcon(props) {
+function PhoneIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -246,7 +246,7 @@ function PhoneIcon(props) {
 }
 
 
-function WalletCardsIcon(props) {
+function WalletCardsIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

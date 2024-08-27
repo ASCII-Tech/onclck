@@ -68,7 +68,7 @@ export function mainheader() {
 }
 export default mainheader;
 
-function MountainIcon(props) {
+function MountainIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

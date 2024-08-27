@@ -137,7 +137,7 @@ export function orderSummary() {
 
 export default orderSummary;
 
-function BanknoteIcon(props) {
+function BanknoteIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -159,7 +159,7 @@ function BanknoteIcon(props) {
 }
 
 
-function LogInIcon(props) {
+function LogInIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -181,7 +181,7 @@ function LogInIcon(props) {
 }
 
 
-function PhoneIcon(props) {
+function PhoneIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

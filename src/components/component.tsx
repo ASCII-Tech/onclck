@@ -270,7 +270,7 @@ export function Component() {
 
 export default Component;
 
-function DollarSignIcon(props) {
+function DollarSignIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -291,7 +291,7 @@ function DollarSignIcon(props) {
 }
 
 
-function PlusIcon(props) {
+function PlusIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -312,7 +312,7 @@ function PlusIcon(props) {
 }
 
 
-function SearchIcon(props) {
+function SearchIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -333,7 +333,7 @@ function SearchIcon(props) {
 }
 
 
-function UserIcon(props) {
+function UserIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

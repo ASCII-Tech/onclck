@@ -85,7 +85,7 @@ export function productTemp() {
 }
 export default productTemp;
 
-function ChevronDownIcon(props) {
+function ChevronDownIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

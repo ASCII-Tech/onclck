@@ -67,7 +67,7 @@ export function AddProduct() {
             <Input type="number" id="price" placeholder="Enter product price" className="w-full" />
           </div>
           <Button type="submit" className="mt-4">
-            Create Ecommerce Website
+            Generate a link
           </Button>
         </form>
       </div>
