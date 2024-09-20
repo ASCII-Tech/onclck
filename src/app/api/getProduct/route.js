@@ -1,6 +1,6 @@
 // app/api/getProduct/route.js
 import { NextResponse } from 'next/server';
-// import { query } from '@/lib/db'; // Adjust the path to your db.js file
+import { query } from '@/lib/db'; // Adjust the path to your db.js file
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
