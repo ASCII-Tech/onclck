@@ -1,4 +1,5 @@
 'use client'
+
 import Link from "next/link"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -6,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from 'next/navigation';
 
 async function fetchProductDetails(id: string) {
@@ -34,7 +35,7 @@ async function fetchProductDetails(id: string) {
   }
 }
 
-export function OrderSummary() {
+function OrderSummaryComponent() {
   const searchParams = useSearchParams();
   const [productDetails, setProductDetails] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
@@ -42,8 +43,7 @@ export function OrderSummary() {
   const effectRan = useRef(false);
 
   useEffect(() => {
-    if(effectRan.current === false)
-    {
+    if (effectRan.current === false) {
       const productId = searchParams.get('productId');
       const qty = parseInt(searchParams.get('quantity') || '1');
       setQuantity(qty);
@@ -55,7 +55,7 @@ export function OrderSummary() {
         });
       }
 
-      return () =>{
+      return () => {
         effectRan.current = true;
       }
     }
@@ -101,6 +101,7 @@ export function OrderSummary() {
               </div>
             </CardContent>
           </Card>
+          {/* Payment Verification Section */}
           <Card>
             <CardHeader>
               <CardTitle>Payment Verification</CardTitle>
@@ -154,10 +155,10 @@ export function OrderSummary() {
                 className="w-full"
                 onClick={() => {
                   const transactionDetails = {
-                    productId: productId, // Add productId here
+                    productId: productId,
                     quantity: quantity.toFixed(2),
                     amount: finalTotal.toFixed(2),
-                  }
+                  };
                   window.location.href = `/invoice?${new URLSearchParams(transactionDetails).toString()}`
                 }}
               >
@@ -171,7 +172,13 @@ export function OrderSummary() {
   )
 }
 
-export default OrderSummary;
+export default function OrderSummary() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OrderSummaryComponent />
+    </Suspense>
+  );
+}
 
 function BanknoteIcon(props: React.SVGProps<SVGSVGElement>) {
   return (

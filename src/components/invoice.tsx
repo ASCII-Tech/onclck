@@ -1,9 +1,8 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
-import  QrCode from 'qrcode';
-
+import QrCode from 'qrcode';
 
 async function fetchProduct(productId: string): Promise<any> {
   try {
@@ -55,11 +54,11 @@ async function createOrder(orderCode: string, price: number) {
   }
 }
 
-export default function Invoice() {
+function InvoiceComponent() {
   const searchParams = useSearchParams();
   const productId = searchParams.get('productId') || '';
-  const quantity = searchParams.get('quantity') || "";
-  const total = searchParams.get('amount') || "";
+  const quantity = parseInt(searchParams.get('quantity') || '0', 10);
+  const total = parseFloat(searchParams.get('amount') || '0');
   const [product, setProduct] = useState<any>(null);
   const [orderCode, setOrderCode] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -68,8 +67,7 @@ export default function Invoice() {
   const effectRan = useRef(false);
 
   useEffect(() => {
-    if(effectRan.current === false)
-    {
+    if (!effectRan.current) {
       setIsLoading(true);
       const fetchData = async () => {
         try {
@@ -79,9 +77,9 @@ export default function Invoice() {
           }
           const code = await fetchOrderCode();
           setOrderCode(code);
-  
+
           // Create order
-          await createOrder(code, parseFloat(total));
+          await createOrder(code, total);
           setOrderCreated(true);
         } catch (error) {
           console.error('Error fetching data or creating order:', error);
@@ -89,11 +87,9 @@ export default function Invoice() {
           setIsLoading(false);
         }
       };
-  
+
       fetchData();
-      return () =>{
-        effectRan.current = true;
-      }
+      effectRan.current = true;
     }
   }, [productId, total]);
 
@@ -137,19 +133,23 @@ export default function Invoice() {
                   </div>
                   <div className="flex flex-col items-center gap-2">
                     <div>Quantity: {quantity}</div>
-                    <img
-                      src={src || "/placeholder.svg"}
-                      alt="QR Code"
-                      width={128}
-                      height={128}
-                      className="rounded-md"
-                      style={{ aspectRatio: "128/128", objectFit: "cover" }}
-                    />
+                    {src ? (
+                      <img
+                        src={src}
+                        alt="QR Code"
+                        width={128}
+                        height={128}
+                        className="rounded-md"
+                        style={{ aspectRatio: "128/128", objectFit: "cover" }}
+                      />
+                    ) : (
+                      <div>Loading QR code...</div>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>Price</div>
-                  <div>${total}</div>
+                  <div>${total.toFixed(2)}</div>
                 </div>
               </div>
               <div className="flex items-center justify-between">
@@ -168,5 +168,13 @@ export default function Invoice() {
         </Card>
       </main>
     </div>
+  );
+}
+
+export default function Invoice() {
+  return (
+    <Suspense fallback={<div>Loading invoice details...</div>}>
+      <InvoiceComponent />
+    </Suspense>
   );
 }
