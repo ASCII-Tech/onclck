@@ -1,30 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select } from '@/components/ui/select';
 import { fetchProducts } from '@/lib/api';
 
 
 export function Products() {
   const [products, setProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [sortColumn, setSortColumn] = useState<keyof Product>('name');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [showAddProductModal, setShowAddProductModal] = useState<boolean>(false);
-  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortColumn, setSortColumn] = useState('name');
+  const [sortDirection, setSortDirection] = useState('asc');
+  const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [newProduct, setNewProduct] = useState({
     name: '',
     description: '',
     price: 0,
@@ -34,24 +23,33 @@ export function Products() {
     images: [],
     tags: [],
   });
+  const effectRan = useRef(false);
 
   useEffect(() => {
-    async function loadProducts() {
-      try {
-        const fetchedProducts = await fetchProducts();
-        setProducts(fetchedProducts);
-      } catch (error) {
-        console.error('Failed to fetch product list', error);
+    if(effectRan.current == false)
+    {
+      const loadProducts = async () => {
+        try {
+          const fetchedProducts = await fetchProducts();
+          setProducts(fetchedProducts);
+        } catch (error) {
+          console.error('Failed to fetch product list', error);
+        }
+      }
+      loadProducts();
+
+      return () =>{
+        effectRan.current = true;
       }
     }
-    loadProducts();
+
   }, []);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSort = (column: keyof Product) => {
+  const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -83,7 +81,7 @@ export function Products() {
     handleCloseAddProductModal();
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (event) => {
     const { name, value } = event.target;
     setNewProduct((prevProduct) => ({
       ...prevProduct,
@@ -91,23 +89,23 @@ export function Products() {
     }));
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (event) => {
     if (event.target.files && event.target.files.length > 0) {
       setNewProduct((prevProduct) => ({
         ...prevProduct,
-        images: [...prevProduct.images, event.target.files![0]],
+        images: [...prevProduct.images, event.target.files[0]],
       }));
     }
   };
 
-  const handleTagAdd = (tag: string) => {
+  const handleTagAdd = (tag) => {
     setNewProduct((prevProduct) => ({
       ...prevProduct,
       tags: [...prevProduct.tags, tag],
     }));
   };
 
-  const handleTagRemove = (index: number) => {
+  const handleTagRemove = (index) => {
     const updatedTags = [...newProduct.tags];
     updatedTags.splice(index, 1);
     setNewProduct((prevProduct) => ({

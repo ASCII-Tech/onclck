@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -12,18 +12,25 @@ export function Overview2() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState(null);
-
+  const effectRan = useRef(false);
   useEffect(() => {
-    async function loadOrders() {
-      try {
-        const fetchedOrders = await fetchOrders();
-        setOrders(fetchedOrders);
-      } catch (error) {
-        console.error("Failed to fetch orders:", error);
-        // You might want to set an error state here and display it to the user
+    
+    if (effectRan.current === false) {
+      console.log("Fetching orders");
+      const loadOrders = async () => {
+        try {
+          const fetchedOrders = await fetchOrders();
+          setOrders(fetchedOrders);
+        } catch (error) {
+          console.error("Failed to fetch orders:", error);
+        }
+      }
+      loadOrders();
+
+      return () =>{
+        effectRan.current = true;
       }
     }
-    loadOrders();
   }, []);
 
   const filteredOrders = useMemo(() => {

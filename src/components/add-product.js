@@ -17,7 +17,7 @@ export function AddProduct() {
   });
   const [files, setFiles] = useState<FileList | null>(null);
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (event) => {
     setFiles(event.target.files);
     console.log(files);
   };
@@ -30,7 +30,7 @@ export function AddProduct() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {

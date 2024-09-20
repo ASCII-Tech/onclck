@@ -8,16 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu"
 
-type Product = {
-  id: number
-  name: string
-  price: number
-  stock: number
-  image_url: string
-  description: string
-}
-
-export function ProductDetails({ product }: { product: Product }) {
+export function ProductDetails({ product }) {
   const [quantity, setQuantity] = useState(1)
 
   return (
@@ -75,7 +66,7 @@ export function ProductDetails({ product }: { product: Product }) {
   )
 }
 
-function ChevronDownIcon(props: React.SVGProps<SVGSVGElement>) {
+function ChevronDownIcon(props) {
   return (
     <svg
       {...props}

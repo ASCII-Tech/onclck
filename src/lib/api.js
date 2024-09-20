@@ -2,6 +2,7 @@
 
 export async function fetchOrders() {
   const response = await fetch('/api/orders');
+  console.log("The API of fetch")
   if (!response.ok) {
     throw new Error('Failed to fetch orders');
   }

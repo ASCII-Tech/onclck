@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import  QrCode from 'qrcode';
@@ -65,29 +65,36 @@ export default function Invoice() {
   const [isLoading, setIsLoading] = useState(true);
   const [src, setSrc] = useState<string>('');
   const [orderCreated, setOrderCreated] = useState(false);
+  const effectRan = useRef(false);
 
   useEffect(() => {
-    setIsLoading(true);
-    const fetchData = async () => {
-      try {
-        if (productId) {
-          const productData = await fetchProduct(productId);
-          setProduct(productData);
+    if(effectRan.current === false)
+    {
+      setIsLoading(true);
+      const fetchData = async () => {
+        try {
+          if (productId) {
+            const productData = await fetchProduct(productId);
+            setProduct(productData);
+          }
+          const code = await fetchOrderCode();
+          setOrderCode(code);
+  
+          // Create order
+          await createOrder(code, parseFloat(total));
+          setOrderCreated(true);
+        } catch (error) {
+          console.error('Error fetching data or creating order:', error);
+        } finally {
+          setIsLoading(false);
         }
-        const code = await fetchOrderCode();
-        setOrderCode(code);
-
-        // Create order
-        await createOrder(code, parseFloat(total));
-        setOrderCreated(true);
-      } catch (error) {
-        console.error('Error fetching data or creating order:', error);
-      } finally {
-        setIsLoading(false);
+      };
+  
+      fetchData();
+      return () =>{
+        effectRan.current = true;
       }
-    };
-
-    fetchData();
+    }
   }, [productId, total]);
 
   useEffect(() => {

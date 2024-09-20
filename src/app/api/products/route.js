@@ -7,7 +7,6 @@ export async function GET() {
   try {
     const sql = `SELECT product_name AS name, description, price, stock_quantity AS stock, currency AS sku, category_id AS category FROM Products`;
     const product = await query(sql);
-    console.log(product);
     return NextResponse.json(product);
   } catch (error) {
     console.error('Error fetching orders:', error);

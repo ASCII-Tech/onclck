@@ -6,10 +6,10 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from 'next/navigation';
 
-async function fetchProductDetails(id) {
+async function fetchProductDetails(id: string) {
   try {
     console.log(`Fetching product details for id: ${id}`);
     const response = await fetch(`/api/orderSummary?id=${id}`, {
@@ -39,17 +39,25 @@ export function OrderSummary() {
   const [productDetails, setProductDetails] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(0);
+  const effectRan = useRef(false);
 
   useEffect(() => {
-    const productId = searchParams.get('productId');
-    const qty = parseInt(searchParams.get('quantity') || '1');
-    setQuantity(qty);
+    if(effectRan.current === false)
+    {
+      const productId = searchParams.get('productId');
+      const qty = parseInt(searchParams.get('quantity') || '1');
+      setQuantity(qty);
+  
+      if (productId) {
+        fetchProductDetails(productId).then(details => {
+          setProductDetails(details);
+          setTotal(details.price * qty);
+        });
+      }
 
-    if (productId) {
-      fetchProductDetails(productId).then(details => {
-        setProductDetails(details);
-        setTotal(details.price * qty);
-      });
+      return () =>{
+        effectRan.current = true;
+      }
     }
   }, [searchParams]);
 
