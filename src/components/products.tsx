@@ -17,6 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select } from '@/components/ui/select';
 import { fetchProducts } from '@/lib/api';
 
+
 export function Products() {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState<string>('');

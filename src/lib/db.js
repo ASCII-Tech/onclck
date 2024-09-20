@@ -6,7 +6,6 @@ const pool = mariadb.createPool({
   user: 'END', // replace with your MariaDB username
   password: '1234', // replace with your MariaDB password
   database: 'oneclick', // replace with your MariaDB database name
-  connectionLimit: 5,
 });
 
 export async function query(sql, params) {
