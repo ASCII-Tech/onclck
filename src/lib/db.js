@@ -15,7 +15,7 @@ const pool = mariadb.createPool({
   database: "OneClick_theerootor", // replace with your MariaDB database name
   connectTimeout: 30000, // 30 seconds
   connectionLimit: 1,
-  ssl: false,
+  ssl: false
 });
 
 
