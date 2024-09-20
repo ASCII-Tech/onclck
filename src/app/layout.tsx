@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/sidebar"
+import { query } from '@/lib/db'; // Adjust the path to your db.js file
+
 
 const inter = Inter({ subsets: ["latin"] });
 

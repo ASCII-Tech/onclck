@@ -1,4 +1,5 @@
-"use client"
+"use client";
+"use strict";
 
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
@@ -15,7 +16,7 @@ export function AddProduct() {
     category_id: 1, // Example category ID, replace with actual categories
     product_image: "",
   });
-  const [files, setFiles] = useState<FileList | null>(null);
+  const [files, setFiles] = useState(null);
 
   const handleFileUpload = (event) => {
     setFiles(event.target.files);
