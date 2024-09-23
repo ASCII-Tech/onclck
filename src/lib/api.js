@@ -26,3 +26,29 @@ export async function AddProduct()
   }
   return response.json();
 }
+
+export async function editProduct(product) {
+  try {
+    const response = await fetch(`/api/products/${product.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(product),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Error editing product:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function deleteProduct(productId) {
+  try {
+    const response = await fetch(`/api/products/${productId}`, {
+      method: 'DELETE',
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    return { success: false, error: error.message };
+  }
+}

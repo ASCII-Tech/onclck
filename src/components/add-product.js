@@ -1,7 +1,7 @@
 "use client";
 "use strict";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -15,13 +15,24 @@ export function AddProduct() {
     stock: 0,
     category_id: 1, // Example category ID, replace with actual categories
   });
-  const [files, setFiles] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [previewUrls, setPreviewUrls] = useState([]);
 
   const handleFileUpload = (event) => {
-    const selectedFiles = event.target.files;
+    const selectedFiles = Array.from(event.target.files);
     setFiles(selectedFiles);
-    console.log(selectedFiles); // Log selected files directly
+    
+    // Generate preview URLs for the selected files
+    const urls = selectedFiles.map(file => URL.createObjectURL(file));
+    setPreviewUrls(urls);
   };
+
+  useEffect(() => {
+    // Cleanup function to revoke object URLs when component unmounts
+    return () => {
+      previewUrls.forEach(URL.revokeObjectURL);
+    };
+  }, [previewUrls]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -43,21 +54,29 @@ export function AddProduct() {
     formData.append("category_id", product.category_id);
 
     // Add files to form data if available
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        formData.append("product_image", files[i]);
-      }
-    }
+    files.forEach((file, index) => {
+      formData.append("product_image", file);
+    });
 
     try {
       const response = await fetch("/api/addproduct", {
         method: "POST",
-        body: formData, // Send formData instead of JSON
+        body: formData,
       });
 
       const data = await response.json();
       if (response.ok) {
         alert("Product added successfully");
+        // Reset form and preview
+        setProduct({
+          name: "",
+          description: "",
+          price: 0,
+          stock: 0,
+          category_id: 1,
+        });
+        setFiles([]);
+        setPreviewUrls([]);
       } else {
         alert(`Error: ${data.error}`);
       }
@@ -69,13 +88,26 @@ export function AddProduct() {
   return (
     <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto px-4 py-12">
       <div className="grid gap-4">
-        <img
-          src="/placeholder.svg"
-          alt={product.name}
-          width={600}
-          height={600}
-          className="w-full rounded-lg object-cover aspect-square"
-        />
+        {previewUrls.length > 0 ? (
+          <div className="grid grid-cols-2 gap-2">
+            {previewUrls.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={`Preview ${index + 1}`}
+                className="w-full rounded-lg object-cover aspect-square"
+              />
+            ))}
+          </div>
+        ) : (
+          <img
+            src="/placeholder.svg"
+            alt="Placeholder"
+            width={600}
+            height={600}
+            className="w-full rounded-lg object-cover aspect-square"
+          />
+        )}
         <div className="flex items-center gap-2">
           <input type="file" multiple onChange={handleFileUpload} />
         </div>

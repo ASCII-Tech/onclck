@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Input } from "@/components/ui/input"
@@ -10,13 +10,22 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 
 export function ProductDetails({ product }) {
   const [quantity, setQuantity] = useState(1)
+  const productImage = useMemo(() => {
+    try {
+      const images = JSON.parse(product.product_images);
+      return images[0].startsWith('/') ? images[0] : `/${images[0]}`;
+    } catch (e) {
+      console.error("Failed to parse product images:", e);
+      return "/placeholder.svg";
+    }
+  }, [product.product_images]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-8 max-w-6xl mx-auto py-8 px-4 md:px-0">
       <div className="grid gap-8">
         <div className="grid grid-cols-1 md:grid-cols-[400px_1fr] gap-8">
           <Image
-            src={product.image_url || "/placeholder.svg"}
+            src={productImage}
             alt={product.product_name}
             width={400}
             height={400}

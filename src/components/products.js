@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-import { fetchProducts } from '@/lib/api';
-
+import { fetchProducts, editProduct, deleteProduct } from '@/lib/api';
+import { EditProductPopupComponent } from '@/components/edit-product-popup';
 
 export function Products() {
   const [products, setProducts] = useState([]);
@@ -24,6 +24,8 @@ export function Products() {
     tags: [],
   });
   const effectRan = useRef(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+
 
   useEffect(() => {
     if(effectRan.current == false)
@@ -125,6 +127,48 @@ export function Products() {
     return 0;
   });
 
+  const handleEdit = (product) => {
+    setEditingProduct(product);
+  };
+
+  const handleSaveEdit = async (updatedProduct) => {
+    try {
+      const result = await editProduct(updatedProduct);
+      if (result.success) {
+        setProducts(products.map(p => p.id === updatedProduct.id ? updatedProduct : p));
+      } else {
+        console.error('Failed to update product:', result.error);
+      }
+    } catch (error) {
+      console.error('Error updating product:', error);
+    }
+    setEditingProduct(null);
+  };
+
+  const handleDelete = async (productId) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      try {
+        const result = await deleteProduct(productId);
+        if (result.success) {
+          setProducts(products.filter(p => p.id !== productId));
+        } else {
+          console.error('Failed to delete product:', result.error);
+        }
+      } catch (error) {
+        console.error('Error deleting product:', error);
+      }
+    }
+  };
+
+  const handleCopy = (productId) => {
+    const url = `localhost:3000/products/${productId}`;
+    navigator.clipboard.writeText(url).then(() => {
+      alert('URL copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy URL: ', err);
+    });
+  };
+
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-6">
@@ -180,14 +224,21 @@ export function Products() {
                   </Link>
                 </td>
                 <td className="border px-4 py-2">
-                  <Button variant="outline">Edit</Button>
-                  <Button variant="outline">Remove</Button>
-                  <Button variant="outline">Copy</Button>
+                  <Button variant="outline" onClick={() => handleEdit(product)}>Edit</Button>
+                  <Button variant="outline" onClick={() => handleDelete(product.id)}>Remove</Button>
+                  <Button variant="outline" onClick={() => handleCopy(product.id)}>Copy</Button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+          {editingProduct && (
+          <EditProductPopupComponent
+            product={editingProduct}
+            onClose={() => setEditingProduct(null)}
+            onSave={handleSaveEdit}
+          />
+        )}
       </div>
     </div>
   );

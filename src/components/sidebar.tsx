@@ -84,10 +84,10 @@ export function Sidebar() {
                   prefetch={false}
                 >
                   <InfoIcon className="h-5 w-5" />
-                  <span className="sr-only">Analytics</span>
+                  <span className="sr-only">About us</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Analytics</TooltipContent>
+              <TooltipContent side="right">About us</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
