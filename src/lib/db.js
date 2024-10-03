@@ -1,23 +1,20 @@
-// lib/db.js
 import mariadb from 'mariadb';
 
-const pool = mariadb.createPool({
-  host: 'localhost', // replace with your MariaDB host
-  user: 'END', // replace with your MariaDB username
-  password: '1234', // replace with your MariaDB password
-  database: 'oneclick', // replace with your MariaDB database name
-});
-// const pool = mariadb.createPool({
-//   host: "7lg.h.filess.io", // replace with your MariaDB host
-//   user: "OneClick_theerootor", // replace with your MariaDB username
-//   port: 3305,
-//   password: "0130828ef3bf675d994cc6d1f2f4250c3b4a017f", // replace with your MariaDB password
-//   database: "OneClick_theerootor", // replace with your MariaDB database name
-//   connectTimeout: 30000, // 30 seconds
-//   connectionLimit: 1,
-//   ssl: false
-// });
+// Determine if the environment is 'production' or 'development'
+const isProduction = process.env.NODE_ENV === 'production';
 
+const pool = mariadb.createPool({
+  host: isProduction ? '7lg.h.filess.io' : 'localhost', // Remote host if in production, local host otherwise
+  user: isProduction ? 'OneClick_theerootor' : 'END', // Remote user if in production, local user otherwise
+  port: isProduction ? 3305 : 3306, // Remote port (3305) vs default MariaDB port (3306)
+  password: isProduction
+    ? '0130828ef3bf675d994cc6d1f2f4250c3b4a017f'
+    : '1234', // Remote password if in production, local password otherwise
+  database: isProduction ? 'OneClick_theerootor' : 'oneclick', // Remote database if in production, local database otherwise
+  connectTimeout: isProduction ? 30000 : 10000, // Timeout: 30 seconds for remote, 10 seconds for local
+  connectionLimit: isProduction ? 1 : 5, // Remote limit of 1 connection, local can handle more
+  ssl: isProduction ? false : false, // SSL config, modify as necessary
+});
 
 export async function query(sql, params) {
   let conn;
@@ -28,8 +25,7 @@ export async function query(sql, params) {
   } catch (err) {
     throw err;
   } finally {
-    if(conn)
-    {
+    if (conn) {
       conn.release(); // release to pool
     }
   }
