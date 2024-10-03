@@ -32,14 +32,14 @@ async function fetchOrderCode() {
   }
 }
 
-async function createOrder(orderCode: string, price: number) {
+async function createOrder(orderCode: string, price: number, quantity: number, productId: string) {
   try {
     const response = await fetch('/api/createOrder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ orderCode, price }),
+      body: JSON.stringify({ orderCode, price, quantity, productId }),
     });
 
     if (!response.ok) {
@@ -56,8 +56,8 @@ async function createOrder(orderCode: string, price: number) {
 
 function InvoiceComponent() {
   const searchParams = useSearchParams();
-  const productId = searchParams.get('productId') || '';
   const quantity = parseInt(searchParams.get('quantity') || '0', 10);
+  const productId = searchParams.get('productId') || '';
   const total = parseFloat(searchParams.get('amount') || '0');
   const [product, setProduct] = useState<any>(null);
   const [orderCode, setOrderCode] = useState('');
@@ -79,7 +79,7 @@ function InvoiceComponent() {
           setOrderCode(code);
 
           // Create order
-          await createOrder(code, total);
+          await createOrder(code, total, quantity, productId);
           setOrderCreated(true);
         } catch (error) {
           console.error('Error fetching data or creating order:', error);
