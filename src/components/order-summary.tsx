@@ -38,6 +38,7 @@ async function fetchProductDetails(id: string) {
 function OrderSummaryComponent() {
   const searchParams = useSearchParams();
   const [productDetails, setProductDetails] = useState<any>(null);
+  const [productName, setProductName] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(0);
   const effectRan = useRef(false);
@@ -45,8 +46,10 @@ function OrderSummaryComponent() {
   useEffect(() => {
     if (effectRan.current === false) {
       const productId = searchParams.get('productId');
+      const productNameUrl = searchParams.get('productName');
       const qty = parseInt(searchParams.get('quantity') || '1');
       setQuantity(qty);
+      setProductName(productNameUrl);
   
       if (productId) {
         fetchProductDetails(productId).then(details => {
@@ -82,21 +85,21 @@ function OrderSummaryComponent() {
             <CardContent>
               <div className="grid gap-4">
                 <div className="flex items-center justify-between">
-                  <div>{productDetails?.name} (x{quantity})</div>
-                  <div>${subtotal.toFixed(2)}</div>
+                  <div>{productName} (x{quantity})</div>
+                  <div>ETB {subtotal.toFixed(2)}</div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>Shipping</div>
-                  <div>${shippingCost.toFixed(2)}</div>
+                  <div>ETB {shippingCost.toFixed(2)}</div>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>Tax</div>
-                  <div>${tax.toFixed(2)}</div>
+                  <div>ETB {tax.toFixed(2)}</div>
                 </div>
                 <Separator />
                 <div className="flex items-center justify-between font-semibold">
                   <div>Total</div>
-                  <div>${finalTotal.toFixed(2)}</div>
+                  <div>ETB {finalTotal.toFixed(2)}</div>
                 </div>
               </div>
             </CardContent>

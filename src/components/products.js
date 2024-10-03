@@ -135,7 +135,7 @@ export function Products() {
     try {
       const result = await editProduct(updatedProduct);
       if (result.success) {
-        setProducts(products.map(p => p.id === updatedProduct.id ? updatedProduct : p));
+        setProducts(products.map(p => p.product_id === updatedProduct.product_id ? updatedProduct : p));
       } else {
         console.error('Failed to update product:', result.error);
       }
@@ -145,12 +145,12 @@ export function Products() {
     setEditingProduct(null);
   };
 
-  const handleDelete = async (productId) => {
+  const handleDelete = async (product) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        const result = await deleteProduct(productId);
+        const result = await deleteProduct(product.product_id);
         if (result.success) {
-          setProducts(products.filter(p => p.id !== productId));
+          setProducts(products.filter(p => p.product_id !== product.product_id));
         } else {
           console.error('Failed to delete product:', result.error);
         }
@@ -160,8 +160,8 @@ export function Products() {
     }
   };
 
-  const handleCopy = (productId) => {
-    const url = `localhost:3000/products/${productId}`;
+  const handleCopy = (product) => {
+    const url = `localhost:3000/products/${product.product_id}`;
     navigator.clipboard.writeText(url).then(() => {
       alert('URL copied to clipboard!');
     }).catch(err => {
@@ -225,8 +225,8 @@ export function Products() {
                 </td>
                 <td className="border px-4 py-2">
                   <Button variant="outline" onClick={() => handleEdit(product)}>Edit</Button>
-                  <Button variant="outline" onClick={() => handleDelete(product.id)}>Remove</Button>
-                  <Button variant="outline" onClick={() => handleCopy(product.id)}>Copy</Button>
+                  <Button variant="outline" onClick={() => handleDelete(product)}>Remove</Button>
+                  <Button variant="outline" onClick={() => handleCopy(product)}>Copy</Button>
                 </td>
               </tr>
             ))}

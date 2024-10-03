@@ -57,8 +57,8 @@ export function EditProductPopupComponent({ product = defaultProduct, onClose, o
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+    <div className="fixed inset-0 bg-black bg-opacity-100 flex items-center justify-center p-4 backdrop-blur-sm">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
         <div className="flex justify-between items-center p-6 border-b">
           <h2 className="text-xl font-semibold">Edit Product</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>

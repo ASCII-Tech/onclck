@@ -44,7 +44,7 @@ export function ProductDetails({ product }) {
               <Badge variant="secondary" className="w-20 h-10">Stock: {product.stock_quantity}</Badge>
             </div>
             <div className="flex items-center gap-2">
-              <Link href={`/transaction/orderSummary?productId=${product.product_id}&quantity=${quantity}`}>
+              <Link href={`/transaction/orderSummary?productId=${product.product_id}&quantity=${quantity}&productName=${product.product_name}`}>
                 <Button size="lg" className="w-full">
                   Buy It Now
                 </Button>

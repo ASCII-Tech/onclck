@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/sidebar"
-import { query } from '@/lib/db'; // Adjust the path to your db.js file
-
+import SidebarWrapper from "@/components/sideBarWarp";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,8 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}
-      <Sidebar/>
+      <body className={inter.className}>
+        {children}
+        <SidebarWrapper />
       </body>
     </html>
   );

@@ -29,7 +29,7 @@ export async function AddProduct()
 
 export async function editProduct(product) {
   try {
-    const response = await fetch(`/api/products/${product.id}`, {
+    const response = await fetch(`/api/products/${product.product_id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(product),
