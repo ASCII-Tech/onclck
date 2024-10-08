@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const sql = `SELECT product_name AS name, description, price, stock_quantity AS stock, currency AS sku, category_id AS category FROM Products`;
+    const sql = `SELECT product_id, product_name AS name, description, price, stock_quantity AS stock, currency AS sku, category_id AS category FROM Products`;
     const product = await query(sql);
     return NextResponse.json(product);
   } catch (error) {

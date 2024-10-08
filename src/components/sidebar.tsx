@@ -45,10 +45,10 @@ export function Sidebar() {
                   prefetch={false}
                 >
                   <LayoutGridIcon className="h-5 w-5" />
-                  <span className="sr-only">Overview</span>
+                  <span className="sr-only">Orders</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Overview</TooltipContent>
+              <TooltipContent side="right">Orders</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -79,7 +79,7 @@ export function Sidebar() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/about"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                   prefetch={false}
                 >

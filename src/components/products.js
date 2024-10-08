@@ -161,6 +161,7 @@ export function Products() {
   };
 
   const handleCopy = (product) => {
+    console.log(product);
     const url = `localhost:3000/products/${product.product_id}`;
     navigator.clipboard.writeText(url).then(() => {
       alert('URL copied to clipboard!');
@@ -215,7 +216,7 @@ export function Products() {
               <tr key={product.id}>
                 <td className="border px-4 py-2">{product.name}</td>
                 <td className="border px-4 py-2">{product.description}</td>
-                <td className="border px-4 py-2">${product.price}</td>
+                <td className="border px-4 py-2">ETB {product.price}</td>
                 <td className="border px-4 py-2">{product.stock}</td>
                 <td className="border px-4 py-2">{product.sku}</td>
                 <td className="border px-4 py-2">

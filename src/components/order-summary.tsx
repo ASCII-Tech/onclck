@@ -71,7 +71,7 @@ function OrderSummaryComponent() {
   const tax = subtotal * taxRate;
   const finalTotal = subtotal + shippingCost + tax;
 
-  const productId = searchParams.get('productId') || ''; // Get the productId from searchParams
+  const productId = searchParams.get('productId') || '';
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">

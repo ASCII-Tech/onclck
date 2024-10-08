@@ -12,9 +12,41 @@ export function Overview2() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState(null);
+  const [privateCode, setPrivateCode] = useState("");
   const effectRan = useRef(false);
+
+  const handlePrivateCodeChange = (e) => {
+    setPrivateCode(e.target.value);
+  };
+
+  const handlePrivateCodeSubmit = async (e) => {
+    e.preventDefault();
+    if (!privateCode) return;
+
+    try {
+      const response = await fetch('/api/finishTransaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ privateCode }),
+      });
+
+      const data = await response.json();
+      console.log(data.message);
+      
+      // Optionally, refresh the orders after confirming a transaction
+      const fetchedOrders = await fetchOrders();
+      setOrders(fetchedOrders);
+    } catch (error) {
+      console.error("Failed to confirm transaction:", error);
+    }
+
+    // Clear the input field after submission
+    setPrivateCode("");
+  };
+
   useEffect(() => {
-    
     if (effectRan.current === false) {
       console.log("Fetching orders");
       const loadOrders = async () => {
@@ -27,7 +59,7 @@ export function Overview2() {
       }
       loadOrders();
 
-      return () =>{
+      return () => {
         effectRan.current = true;
       }
     }
@@ -36,6 +68,7 @@ export function Overview2() {
   const filteredOrders = useMemo(() => {
     return orders.filter((order) =>
       Object.values(order).some((value) => 
+        value !== null && value !== undefined && 
         value.toString().toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
@@ -46,6 +79,8 @@ export function Overview2() {
     return [...filteredOrders].sort((a, b) => {
       const valueA = a[sortColumn];
       const valueB = b[sortColumn];
+      if (valueA == null) return 1;
+      if (valueB == null) return -1;
       if (valueA < valueB) return sortDirection === "asc" ? -1 : 1;
       if (valueA > valueB) return sortDirection === "asc" ? 1 : -1;
       return 0;
@@ -64,8 +99,21 @@ export function Overview2() {
   return (
     <div className="flex flex-col min-h-screen w-auto px-20 overflow-hidden">
       <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-6 lg:h-[60px]">
-        <div className="flex-1">
+      <div className="flex-1">
           <h1 className="font-semibold text-lg">Recent Orders</h1>
+        </div>
+        <div className="relative flex-1 md:grow-0 items-center justify-center">
+          <form onSubmit={handlePrivateCodeSubmit} className="flex items-center">
+            <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Enter private code"
+              value={privateCode}
+              onChange={handlePrivateCodeChange}
+              className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
+            />
+            <Button type="submit" className="ml-2">Submit</Button>
+          </form>
         </div>
         <div className="relative flex-1 md:grow-0">
           <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -106,7 +154,7 @@ export function Overview2() {
           <Table>
             <TableHeader>
               <TableRow>
-                {["order_id", "seller_id", "order_date", "total_amount", "currency", "order_status", "delivery_address", "payment_status", "delivery_date", "tracking_number", "notes"].map((column) => (
+                {["order_id", "seller_id", "order_date", "total_amount", "currency", "order_status", "delivery_address", "payment_status", "delivery_date", "tracking_number", "quantity"].map((column) => (
                   <TableHead key={column} className="cursor-pointer" onClick={() => handleSort(column)}>
                     {column.charAt(0).toUpperCase() + column.slice(1).replace('_', ' ')}
                     {sortColumn === column && (

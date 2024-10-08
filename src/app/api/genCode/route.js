@@ -3,8 +3,8 @@
 import { query } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
-function generateOrderCode(length = 10) {
-  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+function generateOrderCode(length = 6) {
+  const charset = '0123456789';
   let orderCode = '';
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length);
@@ -12,6 +12,7 @@ function generateOrderCode(length = 10) {
   }
   return orderCode;
 }
+
 
 async function orderCodeExists(orderCode) {
   try {
@@ -25,10 +26,10 @@ async function orderCodeExists(orderCode) {
   }
 }
 
-async function generateUniqueOrderCode(length = 10) {
+async function generateUniqueOrderCode(length = 6) {
   let orderCode;
   let attempts = 0;
-  const maxAttempts = 10;
+  const maxAttempts = 6;
 
   do {
     orderCode = generateOrderCode(length);

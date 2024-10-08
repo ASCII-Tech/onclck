@@ -32,6 +32,21 @@ async function fetchOrderCode() {
   }
 }
 
+async function fetchPrivateCode() {
+  try {
+    const response = await fetch('/api/genPrivateCode');
+    if (!response.ok) {
+      throw new Error('Failed to fetch private code');
+    }
+    const data = await response.json();
+    return data.privateCode;
+  }
+  catch (error){
+    console.log(error);
+    throw error;
+  }
+}
+
 async function createOrder(orderCode: string, price: number, quantity: number, productId: string) {
   try {
     const response = await fetch('/api/createOrder', {
@@ -61,6 +76,7 @@ function InvoiceComponent() {
   const total = parseFloat(searchParams.get('amount') || '0');
   const [product, setProduct] = useState<any>(null);
   const [orderCode, setOrderCode] = useState('');
+  const [privateCode, setPrivateCode] = useState(''); 
   const [isLoading, setIsLoading] = useState(true);
   const [src, setSrc] = useState<string>('');
   const [orderCreated, setOrderCreated] = useState(false);
@@ -76,7 +92,9 @@ function InvoiceComponent() {
             setProduct(productData);
           }
           const code = await fetchOrderCode();
+          const privateCode = await fetchPrivateCode();
           setOrderCode(code);
+          setPrivateCode(privateCode);
 
           // Create order
           await createOrder(code, total, quantity, productId);
@@ -97,7 +115,7 @@ function InvoiceComponent() {
     const generateQR = async () => {
       if (orderCode && productId && quantity) {
         try {
-          const qrCodeData = await QrCode.toDataURL(`${orderCode}&${productId}&${quantity}`);
+          const qrCodeData = await QrCode.toDataURL(`${orderCode}&${productId}&${quantity}&${privateCode}`);
           setSrc(qrCodeData);
         } catch (error) {
           console.error('Error generating QR code:', error);
@@ -155,6 +173,10 @@ function InvoiceComponent() {
               <div className="flex items-center justify-between">
                 <div>Order Code</div>
                 <div>{orderCode || 'Loading...'}</div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>Private Code</div>
+                <div>{privateCode || 'Loading...'}</div>
               </div>
             </div>
           </CardContent>

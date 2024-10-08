@@ -27,8 +27,8 @@ export async function POST(request) {
     const newQuantity = currentStock - quantity;
 
     const orderResult = await query(
-      'INSERT INTO Orders (tracking_number, total_amount, currency, seller_id) VALUES (?, ?, ?, ?)',
-      [orderCode, price, "ETB", 1]
+      'INSERT INTO Orders (tracking_number, total_amount, currency, seller_id, quantity) VALUES (?, ?, ?, ?,?)',
+      [orderCode, price, "ETB", 1,quantity]
     );
 
     await query(
