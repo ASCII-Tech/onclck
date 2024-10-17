@@ -2,14 +2,14 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 
-export async function PUT(request, { params }) {
-  const { id } = params;
-  const { product_name, description, price, category, stock_quantity } = await request.json();
+export async function PUT(request) {
+  const { product_name, description, price, category, stock_quantity, id } = await request.json();
+  console.log(id);
 
   try {
     await query(
-      'UPDATE Products SET product_name = ?, description = ?, price = ?, category = ?, stock_quantity = ? WHERE product_id = ?',
-      [product_name, description, price, category, stock_quantity, id]
+      'UPDATE Products SET product_name = ?, description = ?, price = ?, stock_quantity = ? WHERE product_id = ?',
+      [product_name, description, price, stock_quantity, id]
     );
     return NextResponse.json({ success: true, message: 'Product updated successfully' });
   } catch (error) {
@@ -17,7 +17,7 @@ export async function PUT(request, { params }) {
   }
 }
 
-export async function DELETE(request, { params }) {
+export async function DELETE({ params }) {
   const { id } = params;
 
   try {

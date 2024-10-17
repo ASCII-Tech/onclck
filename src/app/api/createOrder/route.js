@@ -4,7 +4,7 @@ import { query } from '@/lib/db';
 
 export async function POST(request) {
   try {
-    const { orderCode, price, quantity, productId } = await request.json();
+    const { orderCode, price, quantity, productId, privateCode } = await request.json();
 
     if (!orderCode || price === undefined || quantity === undefined || productId === undefined) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -27,8 +27,8 @@ export async function POST(request) {
     const newQuantity = currentStock - quantity;
 
     const orderResult = await query(
-      'INSERT INTO Orders (tracking_number, total_amount, currency, seller_id, quantity) VALUES (?, ?, ?, ?,?)',
-      [orderCode, price, "ETB", 1,quantity]
+      'INSERT INTO Orders (tracking_number, total_amount, currency, seller_id, quantity, private_key) VALUES (?, ?, ?, ?, ?, ?)',
+      [orderCode, price, "ETB", 1,quantity,privateCode]
     );
 
     await query(

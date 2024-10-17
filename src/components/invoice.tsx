@@ -47,14 +47,14 @@ async function fetchPrivateCode() {
   }
 }
 
-async function createOrder(orderCode: string, price: number, quantity: number, productId: string) {
+async function createOrder(orderCode: string, price: number, quantity: number, productId: string, privateCode: string) {
   try {
     const response = await fetch('/api/createOrder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ orderCode, price, quantity, productId }),
+      body: JSON.stringify({ orderCode, price, quantity, productId, privateCode }),
     });
 
     if (!response.ok) {
@@ -81,6 +81,8 @@ function InvoiceComponent() {
   const [src, setSrc] = useState<string>('');
   const [orderCreated, setOrderCreated] = useState(false);
   const effectRan = useRef(false);
+  const host = window.location.hostname;
+  const port = window.location.port;
 
   useEffect(() => {
     if (!effectRan.current) {
@@ -97,7 +99,7 @@ function InvoiceComponent() {
           setPrivateCode(privateCode);
 
           // Create order
-          await createOrder(code, total, quantity, productId);
+          await createOrder(code, total, quantity, productId, privateCode);
           setOrderCreated(true);
         } catch (error) {
           console.error('Error fetching data or creating order:', error);
@@ -115,7 +117,8 @@ function InvoiceComponent() {
     const generateQR = async () => {
       if (orderCode && productId && quantity) {
         try {
-          const qrCodeData = await QrCode.toDataURL(`${orderCode}&${productId}&${quantity}&${privateCode}`);
+          const addr = process.env.NODE_ENV === "production" ? "https" : "https";
+          const qrCodeData = await QrCode.toDataURL(`${addr}://${host}:${port}/qr?orderCode=${orderCode}&privateCode=${privateCode}`);
           setSrc(qrCodeData);
         } catch (error) {
           console.error('Error generating QR code:', error);

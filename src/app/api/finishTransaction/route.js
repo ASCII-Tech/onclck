@@ -7,12 +7,12 @@ export async function POST(request) {
     const { privateCode, orderId } = body;
 
     if (!privateCode || !orderId) {
-      return NextResponse.json({ message: 'Missing privateCode or orderId' }, { status: 400 });
+      return NextResponse.json({ message: 'Missing privateCode or orderCode' }, { status: 400 });
     }
 
     // First, verify the privateCode matches the order
     const verifyOrder = await query(
-      'SELECT * FROM Orders WHERE order_id = ? AND private_code = ?',
+      'SELECT * FROM Orders WHERE tracking_number = ? AND private_key = ?',
       [orderId, privateCode]
     );
 
@@ -22,7 +22,7 @@ export async function POST(request) {
 
     // If verified, update the order status
     const updateResult = await query(
-      'UPDATE Orders SET order_status = ? WHERE order_id = ?',
+      'UPDATE Orders SET order_status = ? WHERE tracking_number = ?',
       ['confirmed', orderId]
     );
 

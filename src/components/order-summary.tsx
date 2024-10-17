@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from 'next/navigation';
 
+
 async function fetchProductDetails(id: string) {
   try {
     console.log(`Fetching product details for id: ${id}`);

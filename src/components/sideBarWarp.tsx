@@ -7,7 +7,7 @@ const SidebarWrapper = () => {
   const pathname = usePathname()
   
   // Add routes where you don't want the sidebar to appear
-  const excludedRoutes = ['/login', '/register', '/404', '/product' , '/signup', '/transaction', '/transaction/orderSummary', '/invoice']
+  const excludedRoutes = ['/login', '/register', '/404', '/product' , '/signup', '/transaction', '/transaction/orderSummary', '/invoice', '/qr']
 
   // Add pattern for /products/[id]
   const excludedPatterns = [

@@ -15,6 +15,8 @@ export function Overview2() {
   const [privateCode, setPrivateCode] = useState("");
   const effectRan = useRef(false);
 
+  console.log(process.env.NODE_ENV);
+
   const handlePrivateCodeChange = (e) => {
     setPrivateCode(e.target.value);
   };
