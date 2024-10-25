@@ -5,17 +5,53 @@ import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { fetchOrders } from '@/lib/api';
-
+import { QRCodeScanner, QrCodeIcon } from "@/components/qr-scanner";
 export function Overview2() {
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState(null);
   const [privateCode, setPrivateCode] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [orderId, setOrderId] = useState("");
   const effectRan = useRef(false);
+  const [showScanner, setShowScanner] = useState(false);
+
+  const handleScanComplete = ({ orderCode, privateCode }) => {
+    setOrderId(orderCode);
+    setPrivateCode(privateCode);
+  };
 
   console.log(process.env.NODE_ENV);
+  const handleConfirmTransaction = async () => {
+    if (!privateCode || !orderId) return;
+
+    try {
+      const response = await fetch('/api/finishTransaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ privateCode, orderId }),
+      });
+
+      const data = await response.json();
+      console.log(data.message);
+      
+      // Refresh the orders after confirming a transaction
+      const fetchedOrders = await fetchOrders();
+      setOrders(fetchedOrders);
+      
+      // Close the dialog and reset fields
+      setIsDialogOpen(false);
+      setPrivateCode("");
+      setOrderId("");
+    } catch (error) {
+      console.error("Failed to confirm transaction:", error);
+    }
+  };
 
   const handlePrivateCodeChange = (e) => {
     setPrivateCode(e.target.value);
@@ -104,19 +140,52 @@ export function Overview2() {
       <div className="flex-1">
           <h1 className="font-semibold text-lg">Recent Orders</h1>
         </div>
-        <div className="relative flex-1 md:grow-0 items-center justify-center">
-          <form onSubmit={handlePrivateCodeSubmit} className="flex items-center">
-            <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Enter private code"
-              value={privateCode}
-              onChange={handlePrivateCodeChange}
-              className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-            />
-            <Button type="submit" className="ml-2">Submit</Button>
-          </form>
-        </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button variant="outline">Confirm Order</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Confirm Order</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Input
+                  id="orderId"
+                  placeholder="Order Code"
+                  value={orderId}
+                  onChange={(e) => setOrderId(e.target.value)}
+                  className="col-span-4"
+                />
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Input
+                  id="privateCode"
+                  placeholder="Private Code"
+                  value={privateCode}
+                  onChange={(e) => setPrivateCode(e.target.value)}
+                  className="col-span-4"
+                />
+              </div>
+              <Button 
+                  onClick={() => setShowScanner(true)}
+                  variant="secondary"
+                >
+                  <QrCodeIcon className="h-4 w-4" />
+                </Button>
+            </div>
+            <div className="flex justify-end">
+              <Button onClick={handleConfirmTransaction}>Confirm</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <QRCodeScanner 
+        isOpen={showScanner}
+        onClose={() => setShowScanner(false)}
+        onScan={handleScanComplete}
+      />
         <div className="relative flex-1 md:grow-0">
           <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
