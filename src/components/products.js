@@ -162,7 +162,7 @@ export function Products() {
 
   const handleCopy = (product) => {
     console.log(product);
-    const url = `localhost:3000/products/${product.product_id}`;
+    const url = `localhost:3000/product/${product.product_id}`;
     navigator.clipboard.writeText(url).then(() => {
       alert('URL copied to clipboard!');
     }).catch(err => {

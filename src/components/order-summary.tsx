@@ -36,6 +36,35 @@ async function fetchProductDetails(id: string) {
   }
 }
 
+async function fetchOrderCode() {
+  try {
+    const response = await fetch('/api/genCode');
+    if (!response.ok) {
+      throw new Error('Failed to fetch order code');
+    }
+    const data = await response.json();
+    return data.orderCode;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function fetchPrivateCode() {
+  try {
+    const response = await fetch('/api/genPrivateCode');
+    if (!response.ok) {
+      throw new Error('Failed to fetch private code');
+    }
+    const data = await response.json();
+    return data.privateCode;
+  }
+  catch (error){
+    console.log(error);
+    throw error;
+  }
+}
+
 function OrderSummaryComponent() {
   const searchParams = useSearchParams();
   const [productDetails, setProductDetails] = useState<any>(null);
@@ -43,6 +72,28 @@ function OrderSummaryComponent() {
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(0);
   const effectRan = useRef(false);
+  const [paymentMethod, setPaymentMethod] = useState("telebirr");
+
+  const initiateTelebirrPayment = async (transactionDetails : object) => {
+    try {
+      const response = await fetch('/api/initiateTelebirrPayment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transactionDetails),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to initiate Telebirr payment');
+      }
+
+      const data = await response.json();
+      window.location.href = data.payUrl;
+    } catch (error) {
+      console.error('Error initiating Telebirr payment:', error);
+    }
+  };
 
   useEffect(() => {
     if (effectRan.current === false) {
@@ -115,7 +166,7 @@ function OrderSummaryComponent() {
               <div className="grid gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="payment-method">Payment Method</Label>
-                  <RadioGroup id="payment-method" defaultValue="telebirr" className="grid grid-cols-2 gap-4">
+                  <RadioGroup id="payment-method" defaultValue="telebirr" className="grid grid-cols-2 gap-4" onValueChange={(value) => setPaymentMethod(value)}>
                     <div>
                       <RadioGroupItem value="telebirr" id="telebirr" className="peer sr-only" />
                       <Label
@@ -157,13 +208,28 @@ function OrderSummaryComponent() {
               <Button
                 type="submit"
                 className="w-full"
-                onClick={() => {
-                  const transactionDetails = {
-                    productId: productId,
-                    quantity: quantity.toFixed(2),
-                    amount: finalTotal.toFixed(2),
-                  };
-                  window.location.href = `/invoice?${new URLSearchParams(transactionDetails).toString()}`
+                onClick={async () => {
+                  try {
+                    const orderCode = await fetchOrderCode();
+                    const privateCode = await fetchPrivateCode();
+                    const transactionDetails = {
+                      productId: productId,
+                      quantity: quantity.toFixed(2),
+                      amount: finalTotal.toFixed(2),
+                      orderCode: orderCode,
+                      privateCode: privateCode,
+                    };
+
+                    if (paymentMethod === "telebirr") {
+                      await initiateTelebirrPayment(transactionDetails);
+                      window.location.href = `/invoice?${new URLSearchParams(transactionDetails).toString()}`;
+                    } else {
+                      // For other payment methods, use the existing logic
+                      window.location.href = `/invoice?${new URLSearchParams(transactionDetails).toString()}`;
+                    }
+                  } catch (error) {
+                    console.log("Failed to process the payment");
+                  }
                 }}
               >
                 Verify Payment

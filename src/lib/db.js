@@ -1,7 +1,8 @@
 import mariadb from 'mariadb';
 
 // Determine if the environment is 'production' or 'development'
-C
+const isProduction = process.env.NODE_ENV === 'production';
+
 const pool = mariadb.createPool({
   host: isProduction ? '7lg.h.filess.io' : 'localhost', // Remote host if in production, local host otherwise
   user: isProduction ? 'OneClick_theerootor' : 'END', // Remote user if in production, local user otherwise

@@ -18,35 +18,6 @@ async function fetchProduct(productId: string): Promise<any> {
   }
 }
 
-async function fetchOrderCode() {
-  try {
-    const response = await fetch('/api/genCode');
-    if (!response.ok) {
-      throw new Error('Failed to fetch order code');
-    }
-    const data = await response.json();
-    return data.orderCode;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
-async function fetchPrivateCode() {
-  try {
-    const response = await fetch('/api/genPrivateCode');
-    if (!response.ok) {
-      throw new Error('Failed to fetch private code');
-    }
-    const data = await response.json();
-    return data.privateCode;
-  }
-  catch (error){
-    console.log(error);
-    throw error;
-  }
-}
-
 async function createOrder(orderCode: string, price: number, quantity: number, productId: string, privateCode: string) {
   try {
     const response = await fetch('/api/createOrder', {
@@ -81,8 +52,13 @@ function InvoiceComponent() {
   const [src, setSrc] = useState<string>('');
   const [orderCreated, setOrderCreated] = useState(false);
   const effectRan = useRef(false);
-  const host = window.location.hostname;
-  const port = window.location.port;
+  const [host, setHost] = useState('');
+  const [port, setPort] = useState('');
+
+  useEffect(() => {
+    setHost(window?.location?.hostname);
+    setPort(window?.location?.port);
+  }, []);
 
   useEffect(() => {
     if (!effectRan.current) {
@@ -93,8 +69,8 @@ function InvoiceComponent() {
             const productData = await fetchProduct(productId);
             setProduct(productData);
           }
-          const code = await fetchOrderCode();
-          const privateCode = await fetchPrivateCode();
+          const code = searchParams.get('orderCode') || '';
+          const privateCode = searchParams.get('privateCode') || '';
           setOrderCode(code);
           setPrivateCode(privateCode);
 
