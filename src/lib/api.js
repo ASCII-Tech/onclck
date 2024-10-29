@@ -11,7 +11,7 @@ export async function fetchOrders() {
 
 export async function fetchProducts()
 {
-  const response = await fetch('/api/products');
+  const response = await fetch('/api/products' , { cache: 'no-store' });
   if (!response.ok) {
     throw new Error('Failed to fetch orders');
   }
