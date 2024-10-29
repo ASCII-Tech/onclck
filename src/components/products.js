@@ -162,7 +162,8 @@ export function Products() {
 
   const handleCopy = (product) => {
     console.log(product);
-    const url = `localhost:3000/product/${product.product_id}`;
+    const addr = process.env.NODE_ENV === 'production' ? window.location.hostname : `localhost:${window.location.port}`;
+    const url = `${addr}/product/${product.product_id}`;
     navigator.clipboard.writeText(url).then(() => {
       alert('URL copied to clipboard!');
     }).catch(err => {

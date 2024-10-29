@@ -94,7 +94,7 @@ function InvoiceComponent() {
       if (orderCode && productId && quantity) {
         try {
           const addr = process.env.NODE_ENV === "production" ? "https" : "https";
-          const qrCodeData = await QrCode.toDataURL(`${addr}://${host}:${port}/qr?orderCode=${orderCode}&privateCode=${privateCode}`);
+          const qrCodeData = process.env.NODE_ENV === "production" ? await QrCode.toDataURL(`${addr}://${host}/qr?orderCode=${orderCode}&privateCode=${privateCode}`) : await QrCode.toDataURL(`${addr}://${host}:${port}/qr?orderCode=${orderCode}&privateCode=${privateCode}`);
           setSrc(qrCodeData);
         } catch (error) {
           console.error('Error generating QR code:', error);
