@@ -1,8 +1,8 @@
-'use client'
+'use client';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 
-export default function QRTransaction() {
+function QRTransactionContent() {
   const searchParams = useSearchParams();
   const [message, setMessage] = useState('');
 
@@ -42,5 +42,13 @@ export default function QRTransaction() {
       <h1>QR Transaction</h1>
       {message && <p>{message}</p>}
     </div>
+  );
+}
+
+export default function QRTransaction() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <QRTransactionContent />
+    </Suspense>
   );
 }
