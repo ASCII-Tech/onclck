@@ -1,9 +1,8 @@
-// app/api/products/[id]/route.js
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 
 export async function PUT(request) {
-  const { product_name, description, price, category, stock_quantity, id } = await request.json();
+  const { product_name, description, price, stock_quantity, id } = await request.json();
   console.log(id);
 
   try {
@@ -17,8 +16,8 @@ export async function PUT(request) {
   }
 }
 
-export async function DELETE({ params }) {
-  const { id } = params;
+export async function DELETE(request) {
+  const { id } = request.nextUrl.searchParams;
 
   try {
     await query('DELETE FROM Products WHERE product_id = ?', [id]);
