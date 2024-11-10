@@ -1,5 +1,4 @@
 'use client';
-import { Check } from "lucide-react"
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 
@@ -39,20 +38,9 @@ function QRTransactionContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-lg">
-        <div className="flex flex-col items-center justify-center space-y-6">
-          <div className="rounded-full bg-green-100 p-3">
-            <Check className="h-12 w-12 text-green-600" strokeWidth={3} />
-          </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 sm:text-4xl md:text-5xl">
-            Transaction Completed
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600 sm:text-base">
-            Your transaction has been processed successfully.
-          </p>
-        </div>
-      </div>
+    <div>
+      <h1>QR Transaction</h1>
+      {message && <p>{message}</p>}
     </div>
   );
 }
