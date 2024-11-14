@@ -86,7 +86,7 @@ export function AddProduct() {
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto px-4 py-12">
+    <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto px-20 py-12">
       <div className="grid gap-4">
         {previewUrls.length > 0 ? (
           <div className="grid grid-cols-2 gap-2">

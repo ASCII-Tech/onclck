@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 
 export default function AboutPageComponent() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
+    <div className="min-h-screen px-20 bg-gradient-to-br from-background to-secondary/20">
       <main className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-6xl font-extrabold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
