@@ -1,5 +1,5 @@
 import React from 'react'
-import Overviewpage from '@/components/overview2.js';
+import Overviewpage from '@/components/orders';
 
 const overview = () => {
   return (

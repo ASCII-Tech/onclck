@@ -78,7 +78,7 @@ export default function SalesAnalysisComponent() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen px-20">
+    <div className="container mx-auto py-10 px-20">
       <header className="px-4 lg:px-6 h-14 flex items-center">
         <h1 className="text-lg font-semibold">Sales Analysis Dashboard</h1>
       </header>

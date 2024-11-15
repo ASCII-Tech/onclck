@@ -135,7 +135,7 @@ export function Overview2() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen w-auto px-20 overflow-hidden">
+    <div className="container mx-auto py-10 px-10">
       <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-6 lg:h-[60px]">
       <div className="flex-1">
           <h1 className="font-semibold text-lg">Recent Orders</h1>
