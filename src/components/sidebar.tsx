@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react'
-import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useMediaQuery } from 'react-responsive'
@@ -9,6 +8,9 @@ import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/comp
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
+import { ThemeToggle } from '@/components/theme-toggle'
+
+
 
 import { BarChartIcon, LayoutGridIcon, PackageIcon, PlusIcon, InfoIcon, SettingsIcon, MenuIcon, XIcon } from 'lucide-react'
 
@@ -72,8 +74,24 @@ export function Sidebar() {
           )}
         >
           <ScrollArea className="flex-grow">
-            <nav className="flex flex-col items-start gap-2 p-3">
+            <nav className="flex flex-col items-start gap-6 p-3 py-20">
               <TooltipProvider>
+
+                {/* Add Theme Toggle with Tooltip */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className={cn(
+                      "w-full",
+                      !isMobile && "flex justify-center"
+                    )}>
+                      <ThemeToggle />
+                    </div>
+                  </TooltipTrigger>
+                  {!isMobile && (
+                    <TooltipContent side="right">Toggle theme</TooltipContent>
+                  )}
+                </Tooltip>
+                
                 {navItems.map((item) => (
                   <Tooltip key={item.href}>
                     <TooltipTrigger asChild>
