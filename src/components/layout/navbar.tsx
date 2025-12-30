@@ -12,7 +12,8 @@ import {
   Settings,
   LogOut,
   Moon,
-  Sun
+  Sun,
+  Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -58,6 +59,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Dashboard", href: "/", icon: Home },
     { name: "Products", href: "/products", icon: Package2 },
+    { name: "Orders", href: "/orders", icon: Check },
     { name: "Settings", href: "/settings", icon: Settings },
   ];
 
