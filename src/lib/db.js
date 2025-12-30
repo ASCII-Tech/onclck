@@ -10,7 +10,7 @@ const pool = mariadb.createPool({
   password: process.env.DB_PASSWORD, // Remote password if in production, local password otherwise
   database: process.env.DB_NAME, // Remote database if in production, local database otherwise
   connectTimeout: 10000, // Timeout: 30 seconds for remote, 10 seconds for local
-  connectionLimit: 5, // Remote limit of 1 connection, local can handle more
+  connectionLimit: 1, // Remote limit of 1 connection, local can handle more
   // ssl: isProduction ? false : false, // SSL config, modify as necessary
 });
 
