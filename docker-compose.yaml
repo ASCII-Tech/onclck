@@ -1,0 +1,26 @@
+name: ascii_payment_system
+
+services:
+  mariadb:
+    image: mariadb:11.8
+    container_name: ascii_payment
+    restart: unless-stopped
+    environment:
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: qazwsxedc
+      MARIADB_ROOT_PASSWORD: qazwsxedc
+      MARIADB_DATABASE: ascii_payment_db
+      MARIADB_ROOT_HOST: "%"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ascii_payment_vol:/var/lib/mysql
+    networks:
+      - ascii_payment_net
+
+volumes:
+  ascii_payment_vol:
+
+networks:
+  ascii_payment_net:
+    driver: bridge
