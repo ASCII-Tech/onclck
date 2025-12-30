@@ -13,7 +13,8 @@ import {
   LogOut,
   Moon,
   Sun,
-  Check
+  Check,
+  Info
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -61,6 +62,7 @@ const Navbar = () => {
     { name: "Products", href: "/products", icon: Package2 },
     { name: "Orders", href: "/orders", icon: Check },
     { name: "Settings", href: "/settings", icon: Settings },
+    { name: "About us", href: "/about-us", icon: Info },
   ];
 
   const isActive = (path: string) => pathname === path;
