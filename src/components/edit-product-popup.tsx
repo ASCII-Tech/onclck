@@ -28,7 +28,7 @@ const defaultProduct: Product = {
   price: 0,
   stock: 0,
   sku: "",
-  category: "",
+  category: 1,
 };
 
 export function EditProductPopupComponent({

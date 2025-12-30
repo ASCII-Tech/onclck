@@ -1,6 +1,7 @@
 import { query } from "@/lib/db";
 import { NextResponse } from "next/server";
 
+// --- GET: Fetch Products (Existing) ---
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -30,8 +31,7 @@ export async function GET(request) {
     const countSql = `SELECT COUNT(*) as total FROM Products`;
     const countResult = await query(countSql);
 
-    // FIX: Explicitly convert BigInt to Number to prevent TypeError during division
-    // Also handles case where countResult might be empty
+    // FIX: Explicitly convert BigInt to Number
     const rawTotal = countResult[0] ? countResult[0].total : 0;
     const totalItems = Number(rawTotal);
 
@@ -68,6 +68,81 @@ export async function GET(request) {
     console.error("Error fetching products:", error);
     return NextResponse.json(
       { error: "Failed to fetch products", details: error.message },
+      { status: 500 },
+    );
+  }
+}
+
+// --- POST: Create Product (New) ---
+export async function POST(request) {
+  try {
+    const body = await request.json();
+
+    // Destructure fields, supporting both UI names (name, stock, sku)
+    // and DB names (product_name, stock_quantity, currency)
+    const {
+      product_name,
+      name,
+      description,
+      price,
+      stock_quantity,
+      stock,
+      currency,
+      sku,
+      // We ignore the incoming category to force it to 1
+    } = body;
+
+    // 1. Normalize Values
+    const finalName = product_name || name;
+    const finalStock = stock_quantity !== undefined ? stock_quantity : stock;
+    const finalCurrency = currency || sku || "ETB"; // Default to ETB if missing
+
+    // 2. Enforce Hardcoded Values
+    const categoryId = 1; // As requested
+    const sellerId = 1; // Default seller ID (required by DB FK)
+
+    // 3. Validation
+    if (!finalName || price === undefined) {
+      return NextResponse.json(
+        { error: "Product name and price are required" },
+        { status: 400 },
+      );
+    }
+
+    // 4. Insert into DB
+    const sql = `
+      INSERT INTO Products 
+      (product_name, description, price, stock_quantity, currency, category_id, seller_id) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const result = await query(sql, [
+      finalName,
+      description || "",
+      price,
+      finalStock || 0,
+      finalCurrency,
+      categoryId,
+      sellerId,
+    ]);
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Product created successfully",
+        product: {
+          id: result.insertId.toString(),
+          name: finalName,
+          price: price,
+          category: categoryId,
+        },
+      },
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error("Error creating product:", error);
+    return NextResponse.json(
+      { error: "Failed to create product", details: error.message },
       { status: 500 },
     );
   }

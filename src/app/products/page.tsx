@@ -15,8 +15,10 @@ import {
   SortingState,
   PaginationState,
 } from "@tanstack/react-table";
-import { editProduct, deleteProduct } from "@/lib/api"; // You might need to update fetchProducts signature
+// Make sure to import addProduct here
+import { editProduct, deleteProduct, addProduct } from "@/lib/api";
 import { EditProductPopupComponent } from "@/components/edit-product-popup";
+import { AddProductModal, NewProduct } from "@/components/add-product-modal"; // Import New Modal
 import {
   Table,
   TableBody,
@@ -55,7 +57,7 @@ interface Product {
   price: number;
   stock: number;
   sku: string;
-  category: string;
+  category: number;
 }
 
 interface ApiResponse {
@@ -68,8 +70,6 @@ interface ApiResponse {
   };
 }
 
-// --- Modified Fetch Function ---
-// Move this to lib/api.ts ideally, but inline here for clarity
 const getProducts = async ({
   pageIndex,
   pageSize,
@@ -79,7 +79,7 @@ const getProducts = async ({
   pageSize: number;
   sorting: SortingState;
 }): Promise<ApiResponse> => {
-  const page = pageIndex + 1; // API is 1-indexed, Table is 0-indexed
+  const page = pageIndex + 1;
   const sortField = sorting[0]?.id || "name";
   const sortOrder = sorting[0]?.desc ? "desc" : "asc";
 
@@ -109,7 +109,7 @@ export default function Products() {
   const { data, isLoading, isError, isPlaceholderData } = useQuery({
     queryKey: ["products", pagination, sorting],
     queryFn: () => getProducts({ ...pagination, sorting }),
-    placeholderData: keepPreviousData, // Keeps table filled while fetching next page
+    placeholderData: keepPreviousData,
   });
 
   const products = data?.data || [];
@@ -117,6 +117,20 @@ export default function Products() {
   const totalRows = data?.pagination.total || 0;
 
   // --- Mutations ---
+
+  // 1. Add Product Mutation
+  const addMutation = useMutation({
+    mutationFn: addProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      setShowAddProductModal(false); // Close modal on success
+      alert("Product added successfully!");
+    },
+    onError: (error) => {
+      alert(`Error adding product: ${error.message}`);
+    }
+  });
+
   const editMutation = useMutation({
     mutationFn: editProduct,
     onSuccess: () => {
@@ -133,6 +147,11 @@ export default function Products() {
   });
 
   // --- Handlers ---
+  const handleAddProduct = async (newProduct: NewProduct) => {
+    // Return the promise so the modal can handle the loading state
+    return addMutation.mutateAsync(newProduct);
+  };
+
   const handleEdit = (product: Product) => setEditingProduct(product);
 
   const handleSaveEdit = (updatedProduct: Product) => {
@@ -141,7 +160,7 @@ export default function Products() {
 
   const handleDelete = (product: Product) => {
     if (window.confirm("Are you sure?")) {
-      deleteMutation.mutate(product.product_id); // Assuming API needs ID
+      deleteMutation.mutate(product.product_id);
     }
   };
 
@@ -151,7 +170,7 @@ export default function Products() {
     alert("Copied!");
   };
 
-  // --- Column Definitions (Shadcn/TanStack Table) ---
+  // --- Column Definitions ---
   const columns: ColumnDef<Product>[] = [
     {
       accessorKey: "name",
@@ -261,8 +280,6 @@ export default function Products() {
     onPaginationChange: setPagination,
   });
 
-  // Client-side filtering for Search (since backend search wasn't requested in API code)
-  // Ideally, you pass searchTerm to backend too. For now, we rely on current page.
   const displayProducts = products.filter((p) =>
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -442,6 +459,13 @@ export default function Products() {
           onSave={handleSaveEdit}
         />
       )}
+
+      {/* --- Add Product Modal --- */}
+      <AddProductModal
+        isOpen={showAddProductModal}
+        onClose={() => setShowAddProductModal(false)}
+        onSave={handleAddProduct}
+      />
     </div>
   );
 }

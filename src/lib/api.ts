@@ -1,5 +1,6 @@
 // lib/api.ts
 import { Product, ApiResponse } from "./types";
+import { NewProduct } from "@/components/add-product-modal";
 
 export async function fetchProducts(): Promise<Product[]> {
   // We use full URL for server-side fetches if needed, but client side relative works too.
@@ -51,4 +52,26 @@ export async function deleteProduct(
     console.error("Error deleting product:", error);
     return { success: false, error: error.message };
   }
+}
+
+export async function addProduct(product: NewProduct) {
+  const response = await fetch("/api/products", {
+    // Assuming POST /api/products creates items
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      product_name: product.name,
+      description: product.description,
+      price: product.price,
+      stock_quantity: product.stock,
+      currency: product.sku,
+      category: product.category,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Failed to add product");
+  }
+  return response.json();
 }
