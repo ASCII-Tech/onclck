@@ -6,7 +6,7 @@ export interface Product {
   price: number;
   stock: number;
   sku: string;
-  category: number;
+  category: string;
 }
 
 export interface ApiResponse<T> {
