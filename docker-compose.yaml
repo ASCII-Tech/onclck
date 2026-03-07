@@ -18,6 +18,21 @@ services:
     networks:
       - ascii_payment_net
 
+  postgres:
+    image: postgres:17.6
+    container_name: ascii_payment
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: qazwsxedc
+      POSTGRES_DB: ascii_payment
+    ports:
+      - "5432:5432"
+    volumes:
+      - ascii_payment_vol:/var/lib/postgresql/data
+    networks:
+      - ascii_payment_net
+
 volumes:
   ascii_payment_vol:
 
