@@ -29,7 +29,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ascii_payment_vol:/var/lib/postgresql/data
+      - ascii_payment_vol:/var/lib/postgresql
     networks:
       - ascii_payment_net
 
