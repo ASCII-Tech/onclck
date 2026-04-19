@@ -1,0 +1,235 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String  @id
+  name          String
+  email         String?
+  emailVerified Boolean @default(false)
+  phoneNumber   String?
+  role          Role
+
+  createdAt     DateTime  @default(now())
+  lastUpdatedAt DateTime  @default(now())
+  sessions      Session[]
+  accounts      Account[]
+  orders        Order[]
+  products      Product[]
+
+  image     String?
+  updatedAt DateTime @updatedAt
+
+  @@unique([email, phoneNumber])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Product {
+  id    String @id
+  name  String
+  price Float
+  stock Int
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+
+  media   Media?  @relation(fields: [mediaId], references: [id])
+  mediaId String?
+
+  currency   Currency? @relation(fields: [currencyId], references: [id])
+  currencyId String?
+
+  createdAt     DateTime @default(now())
+  lastUpdatedAt DateTime @default(now())
+
+  orders Order[]
+
+  @@index([id, name])
+  @@map("product")
+}
+
+model Category {
+  id          String @id
+  name        String
+  description String
+
+  products Product[]
+
+  createdAt     DateTime @default(now())
+  lastUpdatedAt DateTime @default(now())
+
+  @@index([id])
+  @@map("category")
+}
+
+model Media {
+  id        String    @id
+  fileName  String
+  url       String
+  size      Int
+  mimeType  String
+  mediaType MediaType
+
+  products Product[]
+
+  createdAt     DateTime @default(now())
+  lastUpdatedAt DateTime @default(now())
+
+  @@index([id])
+  @@map("media")
+}
+
+model Currency {
+  id   String @id
+  code String @unique
+
+  createdAt     DateTime  @default(now())
+  lastUpdatedAt DateTime  @default(now())
+  countries     Country[]
+  products      Product[]
+
+  @@map("currency")
+}
+
+model Country {
+  id     String        @id
+  name   String        @unique
+  status CountryStatus
+
+  currency   Currency @relation(fields: [currencyId], references: [id])
+  currencyId String
+
+  @@index([id, name])
+  @@map("country")
+}
+
+model Order {
+  id String @id
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  status OrderStatus
+
+  orderAmount Int
+  payment     Payment?
+}
+
+model Payment {
+  id String @id
+
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String @unique
+
+  paymentStatus PaymentStatus
+
+  @@unique([id])
+  @@map("payment")
+}
+
+model PaymentClient {
+  id             String            @id
+  name           String
+  type           PaymentClientType
+  paymentAccount String
+}
+
+enum PaymentClientType {
+  BANK
+  CREDIT
+  WALLET
+}
+
+enum PaymentStatus {
+  FAILED
+  SUCESS
+  PENDING
+  REFUNDED
+}
+
+enum OrderStatus {
+  PENDING
+  SUCESS
+  FAILED
+  PROCESSING
+  SHIPPED
+  RETURNED
+  CANCELED
+}
+
+enum MediaType {
+  IMAGE
+  PROFILE
+  VIDEO
+}
+
+enum CountryStatus {
+  ALLOWED
+  DENIED
+}
+
+enum Role {
+  ADMIN
+  USER
+  MODERATOR
+  ASSISTANT
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}

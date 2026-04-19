@@ -1,0 +1,9 @@
+onlyBuiltDependencies:
+  - '@prisma/engines'
+  - bcrypt
+  - prisma
+  - sharp
+  - unrs-resolver
+
+overrides:
+  '@hono/node-server@<1.19.13': '>=1.19.13'
